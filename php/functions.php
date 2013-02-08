@@ -28,7 +28,7 @@ function pte_json_encode($mixed = null){
 		}
 	}
 
-	if ( $logger->get_log_count( PteLogMessage::$ERROR ) > 0 
+	if ( $logger->get_log_count( PteLogMessage::$ERROR ) > 0
 		|| $logger->get_log_count( PteLogMessage::$WARN ) > 0 )
 	{
 		$logs['error'] = $logger->get_logs( PteLogMessage::$ERROR | PteLogMessage::$WARN );
@@ -151,7 +151,7 @@ function pte_get_image_data( $id, $size, $size_data ){
 	$fullsizepath = get_attached_file( $id );
 	$path_information = image_get_intermediate_size($id, $size);
 
-	if ( $path_information && 
+	if ( $path_information &&
 		@file_exists( dirname( $fullsizepath ) . DIRECTORY_SEPARATOR . $path_information['file'] )
 	){
 		return $path_information;
@@ -161,8 +161,8 @@ function pte_get_image_data( $id, $size, $size_data ){
 	// see ajax-thumbnail-rebuild plugin for inspiration
 	if ( FALSE !== $fullsizepath && @file_exists($fullsizepath) ) {
 		// Create the image and update the wordpress metadata
-		$resized = image_make_intermediate_size( $fullsizepath, 
-			$size_data['width'], 
+		$resized = image_make_intermediate_size( $fullsizepath,
+			$size_data['width'],
 			$size_data['height'],
 			$size_data['crop']
 		);
@@ -228,7 +228,7 @@ function pte_launch(){
 
 	$size_information = pte_get_all_alternate_size_information( $id );
 
-	// Get the information needed for image preview 
+	// Get the information needed for image preview
 	//   (See wp-admin/includes/image-edit.php)
 	$nonce = wp_create_nonce("image_editor-$id");
 	$meta = wp_get_attachment_metadata($id, true);
@@ -237,11 +237,11 @@ function pte_launch(){
 		$big = max( $meta['width'], $meta['height'] );
 	}
 	else {
-		$logger->error( 
+		$logger->error(
 			sprintf( __( "Invalid meta data for POST #%d: %s" )
 				, $id
-				, print_r( $meta, true ) 
-			) 
+				, print_r( $meta, true )
+			)
 		);
 		$logger->error( __( "Please contact support", PTE_DOMAIN ) );
 	}
@@ -306,7 +306,7 @@ function pte_check_int( $int ){
  * Get Destination width & height
  * ==============================
  * When the crop isn't set:
- *    the size information for the biggest dimension is accurate, 
+ *    the size information for the biggest dimension is accurate,
  *    but the other dimension is wrong
  */
 function pte_get_width_height( $size_information, $w, $h ){
@@ -373,13 +373,13 @@ function pte_create_image($original_image, $type,
 
 	imagecopyresampled( $new_image, $original_image,
 		$dst_x, $dst_y, $src_x, $src_y,
-		$dst_w, $dst_h, $src_w, $src_h 
+		$dst_w, $dst_h, $src_w, $src_h
 	);
 
 	// convert from full colors to index colors, like original PNG.
-	if ( IMAGETYPE_PNG == $type && 
-		function_exists('imageistruecolor') && 
-		!imageistruecolor( $original_image ) 
+	if ( IMAGETYPE_PNG == $type &&
+		function_exists('imageistruecolor') &&
+		!imageistruecolor( $original_image )
 		){
 			imagetruecolortopalette( $newimage, false, imagecolorstotal( $original_image ) );
 		}
@@ -402,13 +402,13 @@ function pte_write_image( $image, $orig_type, $destfilename ){
 			$logger->error("Resize path invalid");
 			return false;
 		}
-	} 
+	}
 	elseif ( IMAGETYPE_PNG == $orig_type ) {
 		if ( !imagepng( $image, $destfilename ) ){
 			$logger->error("Resize path invalid");
 			return false;
 		}
-	} 
+	}
 	else {
 		// all other formats are converted to jpg
 		$options = pte_get_options();
@@ -434,9 +434,9 @@ function pte_write_image( $image, $orig_type, $destfilename ){
 /*
  * resize_images
  *
- * Take an array of sizes along with the associated resize data (w/h/x/y) 
+ * Take an array of sizes along with the associated resize data (w/h/x/y)
  * and save the images to a temp directory
- * 
+ *
  * OUTPUT: JSON object 'size: url'
  */
 function pte_resize_images(){
@@ -487,7 +487,7 @@ function pte_resize_images(){
 	foreach ( $sizes as $size => $data ){
 		// Get all the data needed to run image_create
 		//
-		//	$dst_w, $dst_h 
+		//	$dst_w, $dst_h
 		extract( pte_get_width_height( $data, $w, $h ) );
 		//
 		// Set the directory
@@ -526,7 +526,7 @@ function pte_resize_images(){
 		return pte_json_error("No images processed");
 	}
 
-	return pte_json_encode( array( 
+	return pte_json_encode( array(
 		'thumbnails'        => $thumbnails,
 		'pte-nonce'         => wp_create_nonce( "pte-{$id}" ),
 		'pte-delete-nonce'  => wp_create_nonce( "pte-delete-{$id}" )
@@ -598,7 +598,7 @@ function pte_confirm_images(){
 		}
 
 		// Delete/unlink old file
-		if ( isset( $old_file ) 
+		if ( isset( $old_file )
 			&& file_exists( $old_file ) )
 		{
 			$logger->debug( "Deleting old thumbnail: {$old_file}" );
@@ -615,10 +615,10 @@ function pte_confirm_images(){
 		//print("IMAGE DIMENSIONS...");
 		//print_r( $image_dimensions );
 		$metadata = wp_get_attachment_metadata( $id, true );
-		$metadata['sizes'][$size] = array( 
+		$metadata['sizes'][$size] = array(
 			'file' => basename( $new_file ),
 			'width' => $w,
-			'height' => $h 
+			'height' => $h
 		);
 		$logger->debug( "Updating '{$size}' metadata: " . print_r( $metadata['sizes'][$size], true ) );
 		wp_update_attachment_metadata( $id, $metadata);

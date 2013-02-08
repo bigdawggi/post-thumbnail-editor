@@ -140,7 +140,7 @@ foreach( $load as $handle ) {
    if ( strpos( $style->src, '/wp-includes/' ) === 0 ) {
       $content = str_replace( 'border-anim-v.gif', '../../../../wp-includes/js/imgareaselect/border-anim-v.gif', $content);
       $content = str_replace( 'border-anim-h.gif', '../../../../wp-includes/js/imgareaselect/border-anim-h.gif', $content);
-   } 
+   }
    $out .= $content;
 }
 
