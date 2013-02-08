@@ -8,11 +8,9 @@
 error_reporting(0);
 
 /** Set ABSPATH for execution */
-//define( 'ABSPATH', dirname(dirname(__FILE__)) . '/' );
-define( 'ABSPATH', dirname(dirname(dirname(dirname(dirname($_SERVER['SCRIPT_FILENAME']))))) . '/' );
+define( 'ABSPATH', urldecode($_GET['abs_path']));
 define( 'WPINC', 'wp-includes' );
-define( 'PLUGINPATH', '/wp-content/plugins/' . basename(dirname(dirname(__FILE__))));
-
+define( 'PLUGINPATH', urldecode($_GET['plugin_path']));
 /**
  * @ignore
  */
@@ -130,9 +128,7 @@ foreach( $load as $handle ) {
    }
 
    $style = $wp_styles->registered[$handle];
-   $path = ABSPATH . $style->src;
-   //$out .= "/** PATH: '$path' **/\n";
-
+   $path = ((strpos($src, WPINC) !== false) ? ABSPATH : '') . $style->src;
    $content = get_file($path) . "\n";
 
    if ( $rtl && isset($style->extra['rtl']) && $style->extra['rtl'] ) {

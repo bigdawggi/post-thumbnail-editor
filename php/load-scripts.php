@@ -8,10 +8,9 @@
 error_reporting(0);
 
 /** Set ABSPATH for execution */
-//define( 'ABSPATH', dirname(dirname(dirname(dirname(__FILE__)))) . '/' );
-define( 'ABSPATH', dirname(dirname(dirname(dirname(dirname($_SERVER['SCRIPT_FILENAME']))))) . '/' );
+define( 'ABSPATH', urldecode($_GET['abs_path']));
 define( 'WPINC', 'wp-includes' );
-define( 'PLUGINPATH', '/wp-content/plugins/' . basename(dirname(dirname(__FILE__))));
+define( 'PLUGINPATH', urldecode($_GET['plugin_path']));
 
 /**
  * @ignore
@@ -136,11 +135,11 @@ $wp_scripts = new WP_Scripts();
 wp_default_scripts($wp_scripts);
 // TODO: Fix the dev/min dichotemy to mimic wordpress functionality
 wp_register_script( 'pte'
-	, PLUGINPATH . "/js/pte.full${suffix}.js"
+	, PLUGINPATH . "js/pte.full${suffix}.js"
 	, array('jquery','imgareaselect')
 );
 wp_register_script( 'jquery-json'
-	, PLUGINPATH . '/apps/jquery.json-2.2.min.js'
+	, PLUGINPATH . 'apps/jquery.json-2.2.min.js'
 	, array('jquery')
 );
 wp_localize_script('pte'
@@ -155,9 +154,14 @@ wp_localize_script('pte'
 foreach( $load as $handle ) {
 	if ( !array_key_exists($handle, $wp_scripts->registered) )
 		continue;
+<<<<<<< HEAD
 
 	$path = ABSPATH . $wp_scripts->registered[$handle]->src;
 	print("/** PATH: '$path' **/\n");
+=======
+	$src = $wp_scripts->registered[$handle]->src;
+	$path = (strpos($src, WPINC) !== false) ? ABSPATH . $src : $src;
+>>>>>>> 2105ae5... allowing WP and WP_CONTENT to be in separate paths
 	$out .= get_file($path) . "\n";
 	$localized = $wp_scripts->get_data($handle, 'data');
 	if ( !empty($localized) )

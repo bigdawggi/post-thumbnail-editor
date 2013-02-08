@@ -254,12 +254,28 @@ function pte_launch(){
 	$logger->debug( "SIZER: ${sizer}" );
 	$logger->debug( "SIZES: " . print_r(${size_information}, true) );
 
+<<<<<<< HEAD
 	$script_url = PTE_PLUGINURL . 'php/load-scripts.php?load=jquery,imgareaselect,pte,jquery-json';
 	$style_url = PTE_PLUGINURL . 'php/load-styles.php?load=imgareaselect,pte';
+=======
+$script_query = build_query(array(
+	'load'=>'jquery,imgareaselect,jquery-json,pte',
+	'abs_path' => urlencode(ABSPATH),
+	'plugin_path' => urlencode($plugin_path),
+));
+$style_query = build_query(array(
+	'load'=>'imgareaselect,pte',
+	'abs_path' => urlencode(ABSPATH),
+	'plugin_path' => urlencode($plugin_path),
+));
+	$script_url = PTE_PLUGINURL . 'php/load-scripts.php?'.$script_query;
+	$style_url = PTE_PLUGINURL . 'php/load-styles.php?'.$style_query;
+>>>>>>> 2105ae5... allowing WP and WP_CONTENT to be in separate paths
 	if ( $options['pte_debug'] ){
 		$style_url .= "&d=1";
 		$script_url .= "&d=1";
 	}
+
 
 	require( PTE_PLUGINPATH . "html/pte.php" );
 }
